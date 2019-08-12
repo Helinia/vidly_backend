@@ -1,0 +1,15 @@
+const express = require('express');
+const app = express();
+const winston = require('winston');
+require('./startup/logging')();
+require('./startup/routes')(app);
+require('./startup/database')();
+require('./startup/config')();
+require('./startup/validation')();
+//throw new Error('Something failed during startup.');
+
+const port = process.env.port || 3000;
+
+app.listen(port, () =>{
+    winston.info(`listening on port ${port}...`);
+});
