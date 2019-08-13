@@ -3,8 +3,8 @@ const request = require('supertest');
 const {Genre} = require('../../models/genre');
 const {User} = require('../../models/user');
 describe('/api/genres', ()=>{
-    beforeEach(()=>{server = require('../../index')});
-    afterEach(async ()=>{server.close();await Genre.remove({});})
+    beforeEach(async()=>{server = require('../../index');await Genre.remove({});});
+    afterEach(async ()=>{await Genre.remove({});server.close();});
     describe('GET /', ()=>{
         it('should return all genres',async ()=>{
             await Genre.collection.insertMany([
@@ -46,9 +46,11 @@ describe('POST /', ()=>{
         let token;
         let name;
         beforeEach(()=>{
+            server = require('../../index');
             token = new User().generateAuthToken();
             name = "genre1";
         });
+        afterEach(async ()=>{await Genre.remove({});server.close();});
         
         
         
@@ -92,7 +94,7 @@ describe('POST /', ()=>{
             
             await exec();
             const genre = await Genre.find({name: 'genre1'});
-            expect(res.status).not.toBeNull();
+            expect(genre).not.toBeNull();
         });
         it('should return genre if it is valid',async ()=>{
             const res = await exec();
