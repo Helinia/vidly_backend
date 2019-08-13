@@ -4,7 +4,7 @@ require('express-async-errors');
 module.exports = function(){
     //event is raised when we have an exception that is not caught in the node express
     winston.handleExceptions(
-        new winston.transports.Console({ colorize: true, prettyPrinte: true})
+        new winston.transports.Console({ colorize: true, prettyPrinte: true}),
         new winston.transports.File({filename: 'uncaughtExceptions.log'})
     );
     // process.on('uncaughtException', ex =>{

@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const {Genre, validate} = require('../models/genre');
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
+const validateObjectId = require('../middleware/validateObjectId');
 //const asyncMiddleware = require('../middleware/async');
 //--asyn functions interacting with database--------------------
 async function getGenres(){
@@ -45,26 +46,27 @@ async function updateGenres(id,name){
 
 //--route methods
 router.get('/', async (req, res) =>{
-    throw new Error('Could not get the genres');
+    //throw new Error('Could not get the genres');
     const genres = await Genre.find().sort('name');
     res.send(genres);
     
 });
 
-router.get('/:id', (req, res )=>{
+router.get('/:id',validateObjectId, (req, res )=>{
+
     Genre.findById(req.params.id)
     .then(result =>{return res.send(result)})
-    .catch(err => {return res.status(403).send(err)});
+    .catch(err => {return res.status(404).send(err)});
 })
 router.post('/', auth, (req,res)=>{
 
 
     const {error} = validate(req.body);
     if(error){
-        res.status(404).send(error.details[0].message);
+        res.status(400).send(error.details[0].message);
     }
     createGenres(req.body.name).then(result =>{
-        console.log(result);
+        //console.log(result);
         res.send(result);
     })
     .catch(err => {
