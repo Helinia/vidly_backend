@@ -6,6 +6,7 @@ require('./startup/routes')(app);
 require('./startup/database')();
 require('./startup/config')();
 require('./startup/validation')();
+require('./startup/prod')(app);
 //throw new Error('Something failed during startup.');
 
 const port = process.env.port || 3000;
